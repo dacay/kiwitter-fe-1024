@@ -6,7 +6,13 @@ export const UserContextProvider = ({ children }) => {
 
     const [token, setToken] = useState('');
 
-    return <UserContext.Provider value={{ token, setToken }}>
+    const isLoggedIn = token !== '';
+
+    const login = (token) => setToken(token);
+
+    const logout = () => setToken('');
+
+    return <UserContext.Provider value={{ isLoggedIn, login, logout }}>
         {children}
     </UserContext.Provider>
 }
