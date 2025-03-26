@@ -8,6 +8,10 @@ function App() {
   return (
     <div>
       <Switch>
+        <Route path="/" exact>
+          {/* /?variant=most_liked */}
+          <PageLayout>Home</PageLayout>
+        </Route>
         <Route path="/login">
           <Login />
         </Route>
@@ -15,10 +19,6 @@ function App() {
           <Signup />
         </Route>
 
-        <Route path="/" exact>
-          {/* /?variant=most_liked */}
-          <PageLayout>Home</PageLayout>
-        </Route>
         <Route path="/profile/:nick">
           <PageLayout>Profile page</PageLayout>
         </Route>
