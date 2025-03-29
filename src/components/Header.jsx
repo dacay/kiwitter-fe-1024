@@ -8,7 +8,7 @@ import { UserContext } from "../contexts/UserContext";
 
 export default function Header() {
 
-    const { isLoggedIn, login, logout } = useContext(UserContext);
+    const { isLoggedIn, logout } = useContext(UserContext);
     const history = useHistory();
 
     const handleLogout = () => {
@@ -39,8 +39,8 @@ export default function Header() {
     } else {
 
         rightContent = <div className="flex flex-row gap-2">
-            <Button title="Login" onClick={handleLogin} />
-            <Button title="Sign Up" onClick={handleSignup} />
+            <Button title="Giriş" onClick={handleLogin} />
+            <Button title="Kayıt Ol" onClick={handleSignup} />
         </div>;
     }
     

@@ -1,5 +1,11 @@
+import { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import { useForm } from "react-hook-form";
+
+import { signUp } from "../utils/api";
+import { UserContext } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const {
@@ -10,8 +16,36 @@ export default function Signup() {
     mode: "onChange",
   });
 
-  function handleSignup(data) {
-    console.log(data, "---");
+  const [inProgress, setInProgress] = useState(false);
+
+  const { login } = useContext(UserContext);
+
+  const history = useHistory();
+
+  async function handleSignup({ name, email, nickname, password }) {
+
+    setInProgress(true);
+
+    try {
+
+      const token = await signUp(name, email, nickname, password);
+
+      login(token);
+
+      toast.success("Kayıt başarılı!");
+
+      setTimeout(() => history.push("/"), 1000);
+
+    } catch(err) {
+
+      console.error(err);
+
+      toast.error("Sign up failed.");
+
+    } finally {
+
+      setInProgress(false);
+    }
   }
 
   return (
@@ -22,7 +56,7 @@ export default function Signup() {
       <form onSubmit={handleSubmit(handleSignup)}>
         <div className="pt-4">
           <div className="flex justify-between gap-2 items-baseline pb-1">
-            <label htmlFor="nickname ">İsim Soyisim</label>
+            <label htmlFor="name">İsim Soyisim</label>
             <span className="text-sm font-medium text-red-600">
               {errors.name && errors.name.message.toString()}
             </span>
@@ -84,9 +118,9 @@ export default function Signup() {
         <div className="pt-4">
           <button
             type="submit"
-            className="h-12 text-center block w-full rounded-lg bg-primary text-white font-bold "
+            className={`h-12 text-center block w-full rounded-lg text-white font-bold ${inProgress ? "bg-gray-700" : "bg-primary"}`}
           >
-            GİRİŞ
+            {inProgress ? "KAYIT OLUYOR..." : "KAYIT OL"}
           </button>
         </div>
       </form>

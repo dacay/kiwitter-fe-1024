@@ -1,5 +1,13 @@
+import { useContext, useState } from "react";
+
 import AuthLayout from "./layouts/AuthLayout";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+
+import { toast } from 'react-toastify';
+
+import { UserContext } from "../contexts/UserContext";
+import { login } from "../utils/api";
 
 export default function Login() {
 
@@ -11,8 +19,38 @@ export default function Login() {
     mode: "onChange",
   });
 
-  function handleLogin(data) {
-    console.log(data, "---");
+  const history = useHistory();
+
+  const [loggingIn, setLoggingIn] = useState(false);
+ 
+  const { login:loginContext } = useContext(UserContext);
+
+  const handleLogin = async ({ nickname, password }) => {
+
+    setLoggingIn(true);
+
+    try {
+
+      const token = await login(nickname, password);
+
+      console.debug("Login completed.");
+
+      loginContext(token);
+
+      toast.success("Successfully logged in!");
+
+      setTimeout(() => history.push("/"), 1000);
+
+    } catch(err) {
+
+      console.error("Failed to log in.", err);
+
+      toast.error("Failed to log in.");
+
+    } finally {
+
+      setLoggingIn(false);
+    }
   }
 
   return (
@@ -51,9 +89,9 @@ export default function Login() {
         <div className="pt-4">
           <button
             type="submit"
-            className="h-12 text-center block w-full rounded-lg bg-primary text-white font-bold "
+            className={`h-12 text-center block w-full rounded-lg text-white font-bold ${loggingIn ? "bg-gray-700" : "bg-primary"}`}
           >
-            GİRİŞ
+            {loggingIn ? "GİRİLİYOR..." : "GİRİŞ"}
           </button>
         </div>
       </form>
