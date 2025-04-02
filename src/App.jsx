@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import PageLayout from "./pages/layouts/PageLayout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Timeline from "./pages/Timeline.jsx";
 import { ToastContainer } from 'react-toastify';
 
 import './utils/devserver.js';
@@ -13,7 +14,7 @@ function App() {
       <Switch>
         <Route path="/" exact>
           {/* /?variant=most_liked */}
-          <PageLayout>Home</PageLayout>
+          <Timeline />
         </Route>
         <Route path="/login">
           <Login />

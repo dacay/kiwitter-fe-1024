@@ -25,3 +25,10 @@ export const signUp = async (name, email, username, password) => {
     
     return resp.data.token;
 }
+
+export const getAllTwits = async () => {
+    
+    const resp = await instance.get("/twits");
+
+    return resp.data.twits;
+}
