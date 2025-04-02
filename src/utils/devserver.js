@@ -4,7 +4,7 @@ function generateRandomDate() {
     const start = new Date(2025, 0, 1); // Start date: Jan 1, 2025
     const end = new Date(); // End date: current date
     const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    return randomDate.toISOString().replace('T', ' ').split('.')[0]; // Format like "2024-09-26 13:04:35"
+    return randomDate.getTime()
 }
 
 function generateRandomAuthors() {
@@ -43,18 +43,25 @@ function generateObjects(n) {
     const objects = [];
     for (let i = 0; i < n; i++) {
         const author = generateRandomAuthors();
+        const like = Math.floor(Math.random() * 100);
         objects.push({
             "id": i + 1,
-            "author_id": author.id,
+            "authorId": author.id,
             "content": generateRandomContent(),
-            "create_date": generateRandomDate(),
-            "likes": Math.floor(Math.random() * 100),
-            "replies": null,
+            "createDate": generateRandomDate(),
+            "likes": like,
+            "replies": Math.floor(Math.random() * 100),
             "name": author.name,
             "username": author.username
         });
+        twitLikes[i+1] = like;
     }
+    
     return objects;
+}
+
+const twitLikes = {
+
 }
 
 createServer({
@@ -66,7 +73,9 @@ createServer({
         this.post("/login", () => {
 
             return {
-                token: "token123"
+                token: "token123",
+                username: "deniz_acay",
+                name: "Deniz Acay"
             }
             // return new Response(401);
         });
@@ -74,7 +83,9 @@ createServer({
         this.post("/users/signup", () => {
 
             return {
-                token: "token123"
+                token: "token123",
+                username: "deniz_acay",
+                name: "Deniz Acay"
             }
         })
 
@@ -84,5 +95,31 @@ createServer({
                 twits: generateObjects(100)
             }
         })
+
+        this.post("/twits", () => {
+
+            return {
+                id: window.crypto.randomUUID(),
+                createDate: Date.now()
+            }
+        });
+
+        this.post("/twits/:twitId/like", (schema, request) => {
+
+            const { twitId } = request.params; 
+
+            if (twitLikes[twitId]) {
+
+                twitLikes[twitId]++;
+
+            } else {
+                
+                twitLikes[twitId] = 1;
+            }
+
+            return {
+                count: twitLikes[twitId]
+            }
+        });
     },
 });

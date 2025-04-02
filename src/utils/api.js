@@ -11,7 +11,7 @@ export const login = async (username, password) => {
         password
     });
 
-    return resp.data.token;
+    return resp.data;
 }
 
 export const signUp = async (name, email, username, password) => {
@@ -32,3 +32,18 @@ export const getAllTwits = async () => {
 
     return resp.data.twits;
 }
+
+export const postTwit = async (data) => {
+    
+    const resp = await instance.post("/twits", data);
+
+    return resp.data;
+}
+
+export const likeTwit = async (twitId) => {
+    
+    const resp = await instance.post(`/twits/${twitId}/like`);
+
+    return resp.data;
+}
+

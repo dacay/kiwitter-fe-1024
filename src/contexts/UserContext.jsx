@@ -4,15 +4,37 @@ export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
 
-    const [token, setToken] = useState('');
+    let userVal = localStorage.getItem("user");
 
-    const isLoggedIn = token !== '';
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [user, setUser] = useState(userVal ? JSON.parse(userVal) : null);
 
-    const login = (token) => setToken(token);
+    const isLoggedIn = token !== null;
 
-    const logout = () => setToken('');
+    const login = ({ token, username, name }) => {
 
-    return <UserContext.Provider value={{ isLoggedIn, login, logout }}>
+        setToken(token);
+
+        const userObj = {
+            username,
+            name            
+        };
+
+        setUser(userObj);
+        
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(userObj));
+    };
+
+    const logout = () => {
+
+        setToken(null);
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+    };
+
+    return <UserContext.Provider value={{ isLoggedIn, login, logout, user }}>
         {children}
     </UserContext.Provider>
 }
